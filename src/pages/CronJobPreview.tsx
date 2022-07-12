@@ -1,5 +1,5 @@
 // React Components
-import { useState } from "react";
+import { useState, FC } from "react";
 
 // Library Components
 import {
@@ -10,20 +10,30 @@ import {
   useToaster,
   Modal,
 } from "rsuite";
+import {
+  MdOutlineStopCircle,
+  MdOutlineNotStarted,
+  MdDeleteOutline,
+  MdOutlineModeEditOutline,
+} from "react-icons/md";
 
 // Page Components
 import { CronJobCRUD } from "./CronJobCRUD";
 
-export const CronJobPreview = ({}) => {
+//
+interface Props {}
+
+export const CronJobPreview: FC<Props> = ({}) => {
   // React Hooks
   const toaster = useToaster();
-  const [buttonIDValue, setButtonIDValue] = useState("");
-  const [isDrawerOpened, setIsDrawerOpened] = useState(true);
-  const [isAlertOpened, setIsAlertOpened] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(true);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(true);
-  const [isExecutionSucceeded, setIsExecutionSucceeded] = useState(false);
+  const [buttonIDValue, setButtonIDValue] = useState<string>("");
+  const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(true);
+  const [isAlertOpened, setIsAlertOpened] = useState<boolean>(false);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(true);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(true);
+  const [isExecutionSucceeded, setIsExecutionSucceeded] =
+    useState<boolean>(true);
 
   // Library Component Hooks
   const {
@@ -39,28 +49,21 @@ export const CronJobPreview = ({}) => {
   const pastAction =
     buttonIDValue === "stop" ? `${buttonIDValue}ped` : `${buttonIDValue}ed`;
 
-  // Functions
-  const executionProcesses = () => {
-    if (isExecutionSucceeded) {
-      return (
-        <Message
-          duration={3000}
-          type="success"
-          showIcon
-          header="Congratulations!"
-          closable
-        >
-          cronJobName has been successfully {pastAction}
-        </Message>
-      );
-    } else {
-      return (
-        <Message duration={3000} type="error" showIcon header="Sorry!" closable>
-          cronJobName has been failed to be {pastAction}.
-        </Message>
-      );
-    }
-  };
+  const executionProcesses = isExecutionSucceeded ? (
+    <Message
+      duration={3000}
+      type="success"
+      showIcon
+      header="Congratulations!"
+      closable
+    >
+      cronJobName has been successfully {pastAction}
+    </Message>
+  ) : (
+    <Message duration={3000} type="error" showIcon header="Sorry!" closable>
+      cronJobName has been failed to be {pastAction}.
+    </Message>
+  );
 
   return (
     <>
@@ -68,7 +71,7 @@ export const CronJobPreview = ({}) => {
         size="sm"
         backdrop="static"
         open={isDrawerOpened}
-        onClose={() => setIsDrawerOpened(false)}
+        onClose={() => setIsDrawerOpened(!isDrawerOpened)}
       >
         <DrawerHeader>
           <DrawerTitle>Preview</DrawerTitle>
@@ -78,30 +81,38 @@ export const CronJobPreview = ({}) => {
                 <Button
                   id="delete"
                   onClick={(e) => (
-                    setButtonIDValue(e.currentTarget.id), setIsAlertOpened(true)
+                    setButtonIDValue(e.currentTarget.id),
+                    setIsAlertOpened(!isAlertOpened)
                   )}
                   color="red"
                   size="md"
                   appearance="primary"
                   loading={isProcessing}
                 >
-                  <div className="flex items-center">Delete</div>
+                  <div className="flex items-center">
+                    <MdDeleteOutline className="mr-1" /> Delete
+                  </div>
                 </Button>
               )}
 
               <Button
                 id={isRunning ? "start" : "stop"}
                 onClick={(e) => (
-                  setButtonIDValue(e.currentTarget.id), setIsAlertOpened(true)
+                  setButtonIDValue(e.currentTarget.id),
+                  setIsAlertOpened(!isAlertOpened)
                 )}
                 color={isRunning ? "green" : "yellow"}
                 size="md"
                 appearance="primary"
               >
                 {isRunning ? (
-                  <div className="flex items-center">Start</div>
+                  <div className="flex items-center">
+                    <MdOutlineNotStarted className="mr-1" /> Start
+                  </div>
                 ) : (
-                  <div className="flex items-center">Stop</div>
+                  <div className="flex items-center">
+                    <MdOutlineStopCircle className="mr-1" /> Stop
+                  </div>
                 )}
               </Button>
               <Button
@@ -112,7 +123,9 @@ export const CronJobPreview = ({}) => {
                 appearance="ghost"
                 active
               >
-                <div className="flex items-center">Modify</div>
+                <div className="flex items-center">
+                  <MdOutlineModeEditOutline className="mr-1" /> Modify
+                </div>
               </Button>
             </DrawerActions>
           )}
@@ -130,28 +143,37 @@ export const CronJobPreview = ({}) => {
         role="alertdialog"
         size="xs"
         open={isAlertOpened}
-        onClose={() => setIsAlertOpened(false)}
+        onClose={() => setIsAlertOpened(isAlertOpened)}
       >
         <ModalTitle>
-          <div className="flex items-center">Confirmation Dialog</div>
+          <div className="flex items-center">
+            <MdDeleteOutline className="mr-1" />
+            Confirmation Dialog
+          </div>
         </ModalTitle>
         <ModalBody>
           Once you clicked the <b>confirm</b> button, cronJobName will be{" "}
-          {pastAction} ASAP. Are you sure to proceed?
+          {pastAction}. Are you sure to proceed?
         </ModalBody>
         <ModalFooter>
           <Button
             onClick={() => (
-              toaster.push(executionProcesses(), {
+              toaster.push(executionProcesses, {
                 placement: "topEnd",
               }),
-              setIsAlertOpened(false)
+              setIsAlertOpened(!isAlertOpened),
+              isExecutionSucceeded
+                ? setIsDrawerOpened(false)
+                : setIsDrawerOpened(true)
             )}
             appearance="primary"
           >
             Confirm
           </Button>
-          <Button onClick={() => setIsAlertOpened(false)} appearance="subtle">
+          <Button
+            onClick={() => setIsAlertOpened(!isAlertOpened)}
+            appearance="subtle"
+          >
             Abort
           </Button>
         </ModalFooter>
