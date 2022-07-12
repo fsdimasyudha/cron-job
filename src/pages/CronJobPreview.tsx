@@ -61,7 +61,8 @@ export const CronJobPreview: FC<Props> = ({}) => {
     </Message>
   ) : (
     <Message duration={3000} type="error" showIcon header="Sorry!" closable>
-      cronJobName has been failed to be {pastAction}.
+      cronJobName has been failed to be {pastAction}. Kindly reach out to the IT
+      support for further assistance!
     </Message>
   );
 
@@ -153,7 +154,7 @@ export const CronJobPreview: FC<Props> = ({}) => {
         </ModalTitle>
         <ModalBody>
           Once you clicked the <b>confirm</b> button, cronJobName will be{" "}
-          {pastAction}. Are you sure to proceed?
+          {pastAction} ASAP. Are you sure to proceed?
         </ModalBody>
         <ModalFooter>
           <Button
