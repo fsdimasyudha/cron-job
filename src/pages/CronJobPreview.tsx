@@ -15,6 +15,7 @@ import {
   MdOutlineNotStarted,
   MdDeleteOutline,
   MdOutlineModeEditOutline,
+  MdOutlineWarningAmber,
 } from "react-icons/md";
 
 // Page Components
@@ -148,7 +149,7 @@ export const CronJobPreview: FC<Props> = ({}) => {
       >
         <ModalTitle>
           <div className="flex items-center">
-            <MdDeleteOutline className="mr-1" />
+            <MdOutlineWarningAmber className="mr-2" />
             Confirmation Dialog
           </div>
         </ModalTitle>
