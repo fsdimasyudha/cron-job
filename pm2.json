@@ -1,0 +1,7 @@
+{
+    "test2": [
+        "name": "client",
+        "script": "yarn",
+        "args": "start"
+    ]
+}
